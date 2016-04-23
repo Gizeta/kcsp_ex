@@ -3,6 +3,7 @@ defmodule KcspEx.Proxy do
 
   plug Plug.Logger
   plug KcspEx.HttpsHandler
+  plug KcspEx.HttpSetup
   plug KcspEx.HttpHandler
 
   def start_link do

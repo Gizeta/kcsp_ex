@@ -1,14 +1,13 @@
 defmodule KcspEx.HttpHandler do
   import Plug.Conn
-  import KcspEx.ConnTool
   require Logger
 
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    url    = build_url(conn)
+    url    = conn.assigns.url
     method = String.to_atom(conn.method)
-    body   = build_body(conn)
+    body   = conn.assigns.body
 
     case HTTPoison.request(method, url, body, conn.req_headers) do
       {:ok, resp} ->
