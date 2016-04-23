@@ -12,6 +12,7 @@ defmodule KcspEx.Mixfile do
 
   def application do
     [applications: [:cowboy,
+                    :eleveldb,
                     :httpoison,
                     :logger,
                     :plug],
@@ -20,7 +21,8 @@ defmodule KcspEx.Mixfile do
 
   defp deps do
     [{:cowboy, "~> 1.0"},
-     {:plug, "~> 1.1"},
-     {:httpoison, "~> 0.8"}]
+     {:eleveldb, "~> 2.1"},
+     {:httpoison, "~> 0.8"},
+     {:plug, "~> 1.1"}]
   end
 end
