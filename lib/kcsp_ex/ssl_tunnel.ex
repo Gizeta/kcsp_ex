@@ -1,5 +1,6 @@
 defmodule KcspEx.SSLTunnel do
   alias KcspEx.SSLStream
+  require Logger
 
   def tunnel_transmission(conn) do
     conn
@@ -30,6 +31,7 @@ defmodule KcspEx.SSLTunnel do
   defp close_tunnel(conn) do
     receive do
       :connection_closed ->
+        Logger.info("Tunnel #{conn.assigns.host}:#{conn.assigns.port} closed")
         conn
     end
   end

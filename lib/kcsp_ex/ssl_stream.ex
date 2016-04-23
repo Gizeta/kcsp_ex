@@ -1,5 +1,5 @@
 defmodule KcspEx.SSLStream do
-  @default_timeout 120000
+  @default_timeout 20000
 
   def stream(to, from, caller) do
     receive_data(from)

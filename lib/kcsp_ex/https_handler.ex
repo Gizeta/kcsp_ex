@@ -1,6 +1,7 @@
 defmodule KcspEx.HttpsHandler do
   import Plug.Conn
   alias KcspEx.SSLTunnel
+  require Logger
 
   @established_message "HTTP/1.1 200 Connection established\r\n\r\n"
 
@@ -21,6 +22,8 @@ defmodule KcspEx.HttpsHandler do
 
   defp parse_remote_server(conn) do
     [host, port] = String.split(conn.request_path, ":")
+    assign(conn, :host, host)
+    assign(conn, :port, port)
     {String.to_char_list(host), String.to_integer(port)}
   end
 
@@ -30,8 +33,10 @@ defmodule KcspEx.HttpsHandler do
     {status, socket} = case :gen_tcp.connect(host, port, [:binary, active: false]) do
       {:ok, sock} ->
         :gen_tcp.send(conn.assigns.client_socket, @established_message)
+        Logger.info("Tunnel #{host}:#{port} establied")
         {:ok, sock}
       _ ->
+        Logger.error("Tunnel #{host}:#{port} failed")
         {:error, nil}
     end
 

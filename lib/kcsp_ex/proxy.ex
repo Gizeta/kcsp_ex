@@ -1,6 +1,7 @@
 defmodule KcspEx.Proxy do
   use Plug.Builder
 
+  plug Plug.Logger
   plug KcspEx.HttpsHandler
   plug KcspEx.HttpHandler
 

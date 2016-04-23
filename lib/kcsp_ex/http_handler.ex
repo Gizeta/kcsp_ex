@@ -1,6 +1,7 @@
 defmodule KcspEx.HttpHandler do
   import Plug.Conn
   import KcspEx.ConnTool
+  require Logger
 
   def init(opts), do: opts
 
