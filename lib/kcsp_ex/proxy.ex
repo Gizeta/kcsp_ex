@@ -1,6 +1,7 @@
 defmodule KcspEx.Proxy do
   use Plug.Builder
-  
+
+  plug KcspEx.HttpsHandler
   plug KcspEx.HttpHandler
 
   def start_link do

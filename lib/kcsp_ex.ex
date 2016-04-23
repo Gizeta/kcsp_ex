@@ -5,7 +5,8 @@ defmodule KcspEx do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(KcspEx.Proxy, [])
+      worker(KcspEx.Proxy, []),
+      supervisor(Task.Supervisor, [[name: KcspEx.SSLSupervisor]])
     ]
 
     opts = [strategy: :one_for_one, name: KcspEx.Supervisor]
