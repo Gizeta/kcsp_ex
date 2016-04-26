@@ -42,11 +42,8 @@ defmodule KcspEx.GameTool do
   end
 
   defp generate_cache_token(%Plug.Conn{assigns: %{body: body}}) do
-    token = Regex.run(~r/token=([0-9a-f]+)/, body)
-            |> Enum.at(1)
-            |> Base.decode16!(case: :lower)
-            |> Base.encode64(padding: false)
-    hash = :crypto.hash(:md4, body) |> Base.encode64 |> String.slice(0, 6)
+    token = Regex.run(~r/token=([0-9a-f]+)/, body) |> Enum.at(1)
+    hash = :crypto.hash(:md4, body) |> Base.encode64
     token <> hash
   end
 end

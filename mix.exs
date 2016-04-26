@@ -12,17 +12,17 @@ defmodule KcspEx.Mixfile do
 
   def application do
     [applications: [:cowboy,
-                    :eleveldb,
                     :httpoison,
                     :logger,
-                    :plug],
+                    :plug,
+                    :ssdb],
      mod: {KcspEx, []}]
   end
 
   defp deps do
     [{:cowboy, "~> 1.0"},
-     {:eleveldb, "~> 2.1"},
      {:httpoison, "~> 0.8"},
-     {:plug, "~> 1.1"}]
+     {:plug, "~> 1.1"},
+     {:ssdb, github: "Gizeta/ssdb-elixir", branch: "bump"}]
   end
 end
