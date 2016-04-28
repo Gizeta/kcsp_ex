@@ -8,7 +8,6 @@ defmodule KcspEx.Proxy do
   plug KcspEx.HttpHandler
 
   def start_link do
-    {:ok, _} = SSDB.start
     {:ok, _} = Plug.Adapters.Cowboy.http __MODULE__, [], port: 8099
   end
 end
