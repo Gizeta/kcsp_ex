@@ -1,6 +1,6 @@
-# kcsp_ex
+# KcspEx
 
-kcsp implemented in Elixir
+Yet another proxy server implementation for playing Kancolle.
 
 ## Installation
 
