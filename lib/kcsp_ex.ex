@@ -7,7 +7,8 @@ defmodule KcspEx do
     children = [
       worker(KcspEx.Proxy, []),
       supervisor(Task.Supervisor, [[name: KcspEx.SSLSupervisor]]),
-      worker(KcspEx.Cache, [])
+      worker(KcspEx.Cache, []),
+      worker(KcspEx.TTLChecker, [])
     ]
 
     opts = [strategy: :one_for_one, name: KcspEx.Supervisor]

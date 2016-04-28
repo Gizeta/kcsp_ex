@@ -22,6 +22,10 @@ defmodule KcspEx.Cache do
     GenServer.cast(:cache, {:delete, key})
   end
 
+  def each(func) do
+    GenServer.cast(:cache, {:each, func})
+  end
+
   def handle_call({:get, key}, _from, db) do
     {:ok, value} = :eleveldb.get(db, key, [])
     {:reply, value, db}
@@ -36,15 +40,37 @@ defmodule KcspEx.Cache do
 
   def handle_cast({:put, key, value}, db) do
     :ok = :eleveldb.put(db, key, value, [])
+    :ok = :eleveldb.put(db, "time_" <> key, to_string(:os.system_time(:seconds)), [])
     {:noreply, db}
   end
 
   def handle_cast({:delete, key}, db) do
     :ok = :eleveldb.delete(db, key, [])
+    :ok = :eleveldb.delete(db, "time_" <> key, [])
+    {:noreply, db}
+  end
+
+  def handle_cast({:each, func}, db) do
+    {:ok, itr} = :eleveldb.iterator(db, [])
+    case :eleveldb.iterator_move(itr, :first) do
+      {:ok, key, value} ->
+        func.(key, value)
+        iter_loop(db, itr, func)
+      _ -> :ok
+    end
     {:noreply, db}
   end
 
   def terminate(_reason, db) do
     :eleveldb.close(db)
+  end
+
+  defp iter_loop(db, itr, func) do
+    case :eleveldb.iterator_move(itr, :next) do
+      {:ok, key, value} ->
+        func.(key, value)
+        iter_loop(db, itr, func)
+      _ -> :ok
+    end
   end
 end
