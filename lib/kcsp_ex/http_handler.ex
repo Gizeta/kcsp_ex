@@ -33,7 +33,7 @@ defmodule KcspEx.HttpHandler do
     case fetch_data(conn) do
       {:ok, resp} ->
         %{conn | resp_headers: filter_header(resp.headers)}
-        |> send_resp(200, resp.body)
+        |> send_resp(resp.status_code, resp.body)
       {:error, reason} ->
         conn
         |> send_resp(500, reason)
