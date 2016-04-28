@@ -8,11 +8,11 @@ defmodule KcspEx.HttpHandler do
   def call(%Plug.Conn{assigns: %{req_type: :api, cache_token: token}}=conn, _opts) do
     case fetch_data(conn) do
       {:ok, resp} ->
-        Cache.set(token, :zlib.gzip(resp.body))
+        Cache.put(token, :zlib.gzip(resp.body))
         %{conn | resp_headers: filter_header(resp.headers)}
         |> send_resp(200, resp.body)
       {:error, reason} ->
-        Cache.set(token, reason)
+        Cache.put(token, reason)
         conn
         |> send_resp(500, reason)
     end
@@ -20,7 +20,7 @@ defmodule KcspEx.HttpHandler do
   def call(%Plug.Conn{assigns: %{req_type: :cache, cache_token: token}}=conn, _opts) do
     case fetch_data(conn) do
       {:ok, resp} ->
-        Cache.set(token, :zlib.gzip(resp.body))
+        Cache.put(token, :zlib.gzip(resp.body))
         %{conn | resp_headers: filter_header(resp.headers)}
         |> send_resp(200, resp.body)
       {:error, reason} ->
