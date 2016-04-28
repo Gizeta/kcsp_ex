@@ -14,7 +14,6 @@ defmodule KcspEx.CacheLookup do
           |> halt
         body ->
           conn
-          |> put_resp_header("content-encoding", "gzip")
           |> put_resp_header("content-type", "text/plain")
           |> send_resp(200, body)
           |> halt
