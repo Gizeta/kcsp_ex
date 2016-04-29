@@ -6,11 +6,9 @@ otp_release:
 branches:
   only:
     - master
-env:
-  - MIX_ENV=prod
 after_success:
-  - mix compile
-  - mix release
+  - MIX_ENV=prod mix compile
+  - MIX_ENV=prod mix release
 before_deploy:
   - ./app_ver.sh
 deploy:
