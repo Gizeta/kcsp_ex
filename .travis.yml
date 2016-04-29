@@ -1,0 +1,22 @@
+language: elixir
+elixir:
+  - 1.2.3
+otp_release:
+  - 18.3
+branches:
+  only:
+    - master
+env:
+  - MIX_ENV=prod
+after_success:
+  - mix compile
+  - mix release
+before_deploy:
+  - ./app_ver.sh
+deploy:
+  provider: release
+  api_key: "d3438f1d008cfc9d2138ff583faecdea44052e2c"
+  file: "rel/kcsp_ex/releases/${APP_VER}/kcsp_ex.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true

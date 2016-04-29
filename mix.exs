@@ -22,6 +22,7 @@ defmodule KcspEx.Mixfile do
   defp deps do
     [{:cowboy, "~> 1.0"},
      {:eleveldb, "~> 2.1"},
+     {:exrm, "~> 1.0"},
      {:httpoison, "~> 0.8"},
      {:plug, "~> 1.1"}]
   end
