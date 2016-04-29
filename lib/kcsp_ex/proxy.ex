@@ -8,6 +8,7 @@ defmodule KcspEx.Proxy do
   plug KcspEx.HttpHandler
 
   def start_link do
-    {:ok, _} = Plug.Adapters.Cowboy.http __MODULE__, [], port: 8099
+    {:ok, _} = Plug.Adapters.Cowboy.http __MODULE__, [],
+      port: Application.get_env(:kcsp_ex, :port)
   end
 end

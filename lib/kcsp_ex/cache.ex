@@ -2,7 +2,8 @@ defmodule KcspEx.Cache do
   use GenServer
 
   def start_link do
-    {:ok, db} = :eleveldb.open('/tmp/kcsp', [create_if_missing: true])
+    path = Application.get_env(:kcsp_ex, :db)
+    {:ok, db} = :eleveldb.open(String.to_char_list(path), [create_if_missing: true])
     GenServer.start_link(__MODULE__, db, [name: :cache])
   end
 
