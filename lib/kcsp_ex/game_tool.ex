@@ -41,9 +41,10 @@ defmodule KcspEx.GameTool do
     |> assign(:req_type, :pass)
   end
 
-  defp generate_cache_token(%Plug.Conn{assigns: %{body: body}}) do
+  defp generate_cache_token(conn) do
+    %Plug.Conn{assigns: %{body: body}, request_path: path} = conn
     token = Regex.run(~r/token=([0-9a-f]+)/, body) |> Enum.at(1)
-    hash = :crypto.hash(:md4, body) |> Base.encode64
+    hash = :crypto.hash(:md4, path <> body) |> Base.encode64
     token <> hash
   end
 end
