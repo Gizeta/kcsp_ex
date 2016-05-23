@@ -11,10 +11,6 @@ defmodule KcspEx.Cache do
     GenServer.call(:cache, {:get, key})
   end
 
-  def exists?(key) do
-    GenServer.call(:cache, {:exist, key})
-  end
-
   def put(key, value) do
     GenServer.cast(:cache, {:put, key, value})
   end
@@ -28,15 +24,8 @@ defmodule KcspEx.Cache do
   end
 
   def handle_call({:get, key}, _from, db) do
-    {:ok, value} = :eleveldb.get(db, key, [])
-    {:reply, value, db}
-  end
-
-  def handle_call({:exist, key}, _from, db) do
-    case :eleveldb.get(db, key, []) do
-      {:ok, _} -> {:reply, true, db}
-      _ -> {:reply, false, db}
-    end
+    ret = :eleveldb.get(db, key, [])
+    {:reply, ret, db}
   end
 
   def handle_cast({:put, key, value}, db) do
