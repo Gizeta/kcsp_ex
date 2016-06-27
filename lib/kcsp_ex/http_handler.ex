@@ -9,10 +9,12 @@ defmodule KcspEx.HttpHandler do
     case fetch_data(conn) do
       {:ok, resp} ->
         Cache.put(token, resp.body)
+        Logger.info("API #{token} #{resp.status_code}")
         %{conn | resp_headers: filter_resp_header(resp.headers)}
-        |> send_resp(200, resp.body)
+        |> send_resp(resp.status_code, resp.body)
       {:error, reason} ->
         Cache.put(token, reason)
+        Logger.error("API #{token} 500 #{reason}")
         conn
         |> send_resp(500, reason)
     end
@@ -21,20 +23,24 @@ defmodule KcspEx.HttpHandler do
     case fetch_data(conn) do
       {:ok, resp} ->
         Cache.put(token, resp.body)
+        Logger.info("CACHE #{token} #{resp.status_code}")
         %{conn | resp_headers: filter_resp_header(resp.headers)}
-        |> send_resp(200, resp.body)
+        |> send_resp(resp.status_code, resp.body)
       {:error, reason} ->
         Cache.del(token)
+        Logger.error("CACHE #{token} 500 #{reason}")
         conn
         |> send_resp(500, reason)
     end
   end
   def call(conn, _opts) do
+    # TODO: Check edgurgel/httpoison#97 whether there is a better solution for streaming.
     case fetch_data(conn) do
       {:ok, resp} ->
         %{conn | resp_headers: filter_resp_header(resp.headers)}
         |> send_resp(resp.status_code, resp.body)
       {:error, reason} ->
+        Logger.error("PIPE #{conn.assigns.url} 500 #{reason}")
         conn
         |> send_resp(500, reason)
     end

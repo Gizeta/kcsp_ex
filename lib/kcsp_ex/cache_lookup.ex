@@ -11,19 +11,23 @@ defmodule KcspEx.CacheLookup do
       {:ok, ^cache_token} ->
         case Cache.get(cache_token) do
           {:ok, "__UNAVAILABLE__"} ->
+            Logger.info("LOSS #{cache_token} #{conn.assigns.url}")
             conn
             |> send_resp(503, "UNAVAILABLE")
             |> halt
           {:ok, body} ->
+            Logger.info("HIT #{cache_token} #{conn.assigns.url}")
             conn
             |> put_resp_header("content-type", "text/plain")
             |> send_resp(200, body)
             |> halt
           :not_found ->
+            Logger.error("LOSS #{cache_token} 404 #{conn.assigns.url}")
             conn
             |> send_resp(404, "WRONG TOKEN")
             |> halt
           _ ->
+            Logger.error("LOSS #{cache_token} 500 #{conn.assigns.url}")
             conn
             |> send_resp(500, "DB ERROR")
             |> halt
@@ -38,6 +42,7 @@ defmodule KcspEx.CacheLookup do
         Cache.put(cache_token, "__UNAVAILABLE__")
         conn
       _ ->
+        Logger.error("LOSS #{cache_token} 500 #{conn.assigns.url}")
         conn
         |> send_resp(500, "DB ERROR")
         |> halt
