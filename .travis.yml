@@ -1,20 +1,23 @@
 language: elixir
 elixir:
-  - 1.2.3
+- 1.2.3
 otp_release:
-  - 18.3
+- 18.3
 branches:
   only:
-    - master
-after_success:
-  - MIX_ENV=prod mix compile
-  - MIX_ENV=prod mix release
+  - master
+  - "/v\\d+\\.\\d+(\\.\\d+)?/"
 before_deploy:
-  - ./app_ver.sh
+- export APP_VER=`mix run --eval "IO.puts(Application.spec(:kcsp_ex, :vsn))" | grep
+  -P "^\d+\.\d+(\.\d+)?"`
+- MIX_ENV=prod mix compile
+- MIX_ENV=prod mix release
 deploy:
-  provider: release
-  api_key: "d3438f1d008cfc9d2138ff583faecdea44052e2c"
-  file: "rel/kcsp_ex/releases/${APP_VER}/kcsp_ex.tar.gz"
+  provider: releases
+  api_key:
+    secure: LlRoo/I6MaAippTOEYBz2gYUB5EcEwDNGq227XSLcNEQ/ZDv4wFORexnZxByblHVeFYkbqM9PTB8TUcLWCctUFA/KO5TPeWJXFf+E5FQjmLEEGZ1UG+xriUvGDAMWw6q5kozXzuxj/VyaWAuI2cExCD6G3R266HGDaarkLZvwggIX+pIY8ZSsjiJpwBkUgNczDIh1Y1a648er8nm9mE5AoNhb2cRlRqgt4Lqp4MclupoJPsLj2D8QvT/qole+plYUffxsn4Zzufmh666nmHUQlAKovukXf6g6MCBE2in2/wxM4j/eFTTlVX+lW29HzGrw1FQYzLlqoD3bRoFvT+3+3U6Lz/2dPZLCpHt6t7glBqf3nFatdbTt2PbtDP/8dqtM7Tlfr5irDCHfuCzc+SG4JTqp2ga29ybFoJr1XXHodr9OlculEEd6+90GfY1qARB3tAR6sF4KWxB53fc/D8kNBMHisbuP4HJ0M1PEof2tlrFbXu+TeSwTbgwyHr2i0Ndb55tRHpfgUsJvyuA7685rONuWEDYALfE4tnUVvT4Vdh95kF6NiYvCphip0WDs5MiiTA+H/2dO38TQGIe3FxuxteLC04b5Z1VmzVtTwEOAoWr9n8jCdMc+An4G2EYTCwuVX9esqSAlVZKs5ENwoWQbc2HT3j8XK39tF6eISSTeSw=
+  file: rel/kcsp_ex/releases/${APP_VER}/kcsp_ex.tar.gz
   skip_cleanup: true
   on:
+    repo: Gizeta/kcsp_ex
     tags: true
